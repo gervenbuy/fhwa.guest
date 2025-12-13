@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BNI 菁英專題講座 邀約網站</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+        .hero-bg {
+            background-image: url('https://i.meee.com.tw/2B9ecW2.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        .form-container, .success-message {
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out, visibility 0.5s ease-in-out;
+        }
+        .hidden-form {
+            opacity: 0;
+            transform: scale(0.95);
+            visibility: hidden; /* More transition-friendly than display:none */
+            pointer-events: none; /* Explicitly prevent click interception */
+        }
+        .spinner {
+            border-top-color: transparent;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <img src="https://i.meee.com.tw/0GVAOCy.png" alt="BNI Logo" class="h-12">
+                <span class="text-xl font-bold text-gray-700">台中市區 | 豐華分會</span>
+            </div>
+            <a href="#form-section" class="bg-red-600 text-white px-6 py-2 rounded-full hover:bg-red-700 transition duration-300 font-bold hidden sm:block">
+                立即報名
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-bg text-white py-20 sm:py-32">
+        <div class="container mx-auto px-6 text-center bg-black bg-opacity-50 rounded-xl py-12">
+            <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-4">
+                歡迎蒞臨 BNI 台中市區 豐華分會
+            </h1>
+            <p class="text-lg md:text-2xl">
+                Givers Gain® (先捨後得)，是我們的核心價值
+            </p>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">關於我們</h2>
+            <p class="max-w-3xl mx-auto text-gray-600 text-lg mb-12">
+                本分會高達 13 大類產業別，將近百人企業主，透過 BNI 獨有的產業鏈合作模式，我們每週聚集，不僅是分享商機，更是建立深厚的信任關係。歡迎參加例會，與我們一同交流成長！
+            </p>
+            <div class="max-w-5xl mx-auto">
+                <img src="https://i.meee.com.tw/MlOlqL0.jpg" alt="產業分組資訊" class="rounded-xl shadow-lg w-full">
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Event Info and Form Section -->
+    <section class="bg-gray-100 py-20">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-start">
+                <!-- Event Details -->
+                <div class="lg:w-1/2 lg:pr-12">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">例會資訊</h2>
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h4 class="font-bold text-lg text-red-700">會議時間</h4>
+                            <p class="text-gray-700"><strong>報告及交流時間：</strong> 每週三 06:10 ~ 06:28</p>
+                            <p class="text-gray-700"><strong>例會時間：</strong> 每週三 06:28 ~ 08:30</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h4 class="font-bold text-lg text-red-700">會議地點</h4>
+                            <p class="text-gray-700">線上 ZOOM MEETING (報名成功後將提供會議連結)</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h4 class="font-bold text-lg text-red-700">溫馨提醒</h4>
+                            <p class="text-gray-700">請著正式服裝，並準備 15 秒的自我介紹，讓我們能更認識您！</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Section -->
+                <div id="form-section" class="mt-12 lg:mt-0 lg:w-1/2 lg:pl-12 w-full">
+                    <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 relative overflow-hidden min-h-[500px]">
+                        <div id="form-container" class="form-container">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">線上報名</h3>
+                            <form id="signup-form" class="space-y-4">
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">您的姓名</label>
+                                    <input type="text" id="name" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 transition">
+                                </div>
+                                <div>
+                                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">您的電話</label>
+                                    <input type="tel" id="phone" name="phone" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 transition">
+                                </div>
+                                <div>
+                                    <label for="inviter" class="block text-sm font-medium text-gray-700 mb-1">您的邀請人是?</label>
+                                    <input type="text" id="inviter" name="inviter" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 transition">
+                                </div>
+                                 <div>
+                                    <label for="attendance_date" class="block text-sm font-medium text-gray-700 mb-1">預計參加時間</label>
+                                    <input type="date" id="attendance_date" name="attendance_date" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 transition">
+                                </div>
+                                <div>
+                                    <label for="company" class="block text-sm font-medium text-gray-700 mb-1">您的公司名稱是?</label>
+                                    <input type="text" id="company" name="company" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 transition">
+                                </div>
+                                <div>
+                                    <label for="industry" class="block text-sm font-medium text-gray-700 mb-1">您的產業別是?</label>
+                                    <input type="text" id="industry" name="industry" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 transition">
+                                </div>
+                                 <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-MAIL</label>
+                                    <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 transition">
+                                </div>
+                                <div>
+                                    <label for="service_intro" class="block text-sm font-medium text-gray-700 mb-1">簡單介紹您的產品或工作服務的內容</label>
+                                    <textarea id="service_intro" name="service_intro" rows="3" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 transition"></textarea>
+                                </div>
+                                <div>
+                                    <label for="collaboration_needs" class="block text-sm font-medium text-gray-700 mb-1">您希望合作的產業別有哪些呢?</label>
+                                    <textarea id="collaboration_needs" name="collaboration_needs" rows="3" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 transition"></textarea>
+                                </div>
+                                <div>
+                                    <label for="photo" class="block text-sm font-medium text-gray-700 mb-1">請上傳一張您的帥照/美照</label>
+                                    <input type="file" id="photo" name="photoFile" accept="image/*" required class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
+                                </div>
+                                <button type="submit" id="submit-button" class="w-full bg-red-600 text-white py-3 px-4 rounded-lg font-bold hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-300 flex items-center justify-center">
+                                    <span id="button-text">立即報名</span>
+                                    <div id="loading-spinner" class="spinner border-4 border-white rounded-full hidden ml-3"></div>
+                                </button>
+                            </form>
+                        </div>
+                        <div id="success-message" class="success-message hidden-form absolute inset-0 bg-white flex flex-col items-center justify-center p-8 text-center">
+                             <svg class="w-16 h-16 text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <h3 class="text-2xl font-bold text-gray-800">報名成功！</h3>
+                            <p class="text-gray-600 mt-2">感謝您的報名，我們已收到您的資料，期待在線上會議與您相見！</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto px-6 text-center text-sm">
+            <p>&copy; 2025 BNI 台中市區 豐華分會. All Rights Reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('signup-form');
+            const submitButton = document.getElementById('submit-button');
+            const buttonText = document.getElementById('button-text');
+            const spinner = document.getElementById('loading-spinner');
+            const formContainer = document.getElementById('form-container');
+            const successMessage = document.getElementById('success-message');
+            const photoInput = document.getElementById('photo');
+
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx14_gS6dThpkOU0RriWyKbZ9votXxGFjkKPHs7v7D4ADdIvZwtKGrFN_u788Lv7zpA3Q/exec";
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                buttonText.textContent = '傳送中...';
+                spinner.classList.remove('hidden');
+                submitButton.disabled = true;
+
+                const file = photoInput.files[0];
+
+                const getFormDataAsObject = () => {
+                    const formData = new FormData(form);
+                    const data = {};
+                    formData.forEach((value, key) => {
+                        if (key !== 'photoFile') {
+                            data[key] = value;
+                        }
+                    });
+                    return data;
+                };
+                
+                const sendPayload = (payload) => {
+                     fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors', 
+                        body: JSON.stringify(payload),
+                        headers: {
+                            'Content-Type': 'text/plain;charset=utf-8',
+                        },
+                    })
+                    .then(res => {
+                        console.log("Form submission request sent.");
+                        formContainer.classList.add('hidden-form');
+                        successMessage.classList.remove('hidden-form');
+                        form.reset();
+                    })
+                    .catch(error => {
+                        console.error('Submission Network Error!', error);
+                        alert('報名失敗，請檢查您的網路連線。');
+                    })
+                    .finally(() => {
+                        buttonText.textContent = '立即報名';
+                        spinner.classList.add('hidden');
+                        submitButton.disabled = false;
+                    });
+                };
+
+                // Since photo is required, we always expect a file.
+                if (file) {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => {
+                        const fileContent = reader.result;
+                        let payload = getFormDataAsObject();
+                        payload.photoFile = {
+                            fileName: file.name,
+                            mimeType: file.type,
+                            base64Data: fileContent.split(',')[1]
+                        };
+                        sendPayload(payload);
+                    };
+                    reader.onerror = (error) => {
+                         console.error('File Read Error!', error);
+                         alert('讀取檔案時發生錯誤，請稍後再試。');
+                         buttonText.textContent = '立即報名';
+                         spinner.classList.add('hidden');
+                         submitButton.disabled = false;
+                    };
+                } else {
+                    // This part is now mainly a fallback, as the form requires a file.
+                    alert('請務必上傳您的照片。');
+                    buttonText.textContent = '立即報名';
+                    spinner.classList.add('hidden');
+                    submitButton.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
