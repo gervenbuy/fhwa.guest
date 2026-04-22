@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>歡迎蒞臨 BNI 台中市區 豐華分會</title>
+    <title>BNI 菁英專題講座 邀約網站</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,49 +34,6 @@
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
-        }
-
-        /* ✅ 錯誤提示動畫 */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-6px); }
-            40%, 80% { transform: translateX(6px); }
-        }
-        .shake {
-            animation: shake 0.4s ease-in-out;
-        }
-
-        /* ✅ 錯誤訊息樣式 */
-        #error-banner {
-            display: none;
-            background: #fef2f2;
-            border: 1px solid #fca5a5;
-            border-radius: 8px;
-            padding: 12px 16px;
-            margin-bottom: 16px;
-            color: #dc2626;
-            font-size: 14px;
-        }
-        #error-banner.show {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* ✅ 重試狀態樣式 */
-        .retry-btn {
-            background: #dc2626;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 4px 10px;
-            font-size: 13px;
-            cursor: pointer;
-            margin-left: auto;
-            white-space: nowrap;
-        }
-        .retry-btn:hover {
-            background: #b91c1c;
         }
     </style>
 </head>
@@ -115,7 +72,7 @@
                 本分會高達 13 大類產業別，將近百人企業主，透過 BNI 獨有的產業鏈合作模式，我們每週聚集，不僅是分享商機，更是建立深厚的信任關係。歡迎參加例會，與我們一同交流成長！
             </p>
             <div class="max-w-5xl mx-auto">
-                <img src="https://i.meee.com.tw/Og8GRjA.jpg" alt="產業分組資訊" class="rounded-xl shadow-lg w-full">
+                <img src="https://i.meee.com.tw/MlOlqL0.jpg" alt="產業分組資訊" class="rounded-xl shadow-lg w-full">
             </div>
         </div>
     </section>
@@ -149,16 +106,6 @@
                     <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 relative overflow-hidden min-h-[500px]">
                         <div id="form-container" class="form-container">
                             <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">線上報名</h3>
-
-                            <!-- ✅ 錯誤提示橫幅 -->
-                            <div id="error-banner">
-                                <svg style="flex-shrink:0;width:18px;height:18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                                <span id="error-text">送出失敗，請稍後再試。</span>
-                                <button class="retry-btn" onclick="retrySubmit()">重新送出</button>
-                            </div>
-
                             <form id="signup-form" class="space-y-4">
                                 <div>
                                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">您的姓名</label>
@@ -206,12 +153,8 @@
                                 </button>
                             </form>
                         </div>
-
-                        <!-- 成功訊息 -->
                         <div id="success-message" class="success-message hidden-form absolute inset-0 bg-white flex flex-col items-center justify-center p-8 text-center">
-                            <svg class="w-16 h-16 text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
+                            <svg class="w-16 h-16 text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <h3 class="text-2xl font-bold text-gray-800">報名成功！</h3>
                             <p class="text-gray-600 mt-2">感謝您的報名，我們已收到您的資料，期待在線上會議與您相見！</p>
                         </div>
@@ -229,15 +172,6 @@
     </footer>
     
     <script>
-        // 🔴 請更換成您最新的 Google Apps Script 部署網址
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGUUDPdRX0yMWqBmyLtcrYa0tnRhyGAghSl8VCSATZn53igKR8WcC2OK2k7E7_9ay2/exec";
-
-        // ✅ 最大重試次數
-        const MAX_RETRY = 3;
-
-        let lastPayload = null; // 儲存最後一次的送出資料，供重試使用
-        let retryCount = 0;
-
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('signup-form');
             const submitButton = document.getElementById('submit-button');
@@ -246,86 +180,16 @@
             const formContainer = document.getElementById('form-container');
             const successMessage = document.getElementById('success-message');
             const photoInput = document.getElementById('photo');
-            const errorBanner = document.getElementById('error-banner');
-            const errorText = document.getElementById('error-text');
 
-            // ✅ 顯示錯誤橫幅
-            function showError(msg) {
-                errorText.textContent = msg;
-                errorBanner.classList.add('show');
-                // 讓按鈕抖動
-                submitButton.classList.add('shake');
-                setTimeout(() => submitButton.classList.remove('shake'), 500);
-            }
+            // ✅ 已更新為最新腳本網址
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGUUDPdRX0yMWqBmyLtcrYa0tnRhyGAghSl8VCSATZn53igKR8WcC2OK2k7E7_9ay2/exec";
 
-            // ✅ 隱藏錯誤橫幅
-            function hideError() {
-                errorBanner.classList.remove('show');
-            }
-
-            // ✅ 設定送出中狀態
-            function setLoading(isLoading) {
-                if (isLoading) {
-                    buttonText.textContent = '傳送中...';
-                    spinner.classList.remove('hidden');
-                    submitButton.disabled = true;
-                } else {
-                    buttonText.textContent = '立即報名';
-                    spinner.classList.add('hidden');
-                    submitButton.disabled = false;
-                }
-            }
-
-            // ✅ 核心送出函式（支援重試）
-            function sendPayload(payload) {
-                setLoading(true);
-                hideError();
-
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify(payload),
-                    headers: {
-                        'Content-Type': 'text/plain;charset=utf-8',
-                    },
-                })
-                .then(() => {
-                    // no-cors 無法判斷 response status，視為成功
-                    console.log("送出成功");
-                    retryCount = 0;
-                    lastPayload = null;
-                    formContainer.classList.add('hidden-form');
-                    successMessage.classList.remove('hidden-form');
-                    form.reset();
-                })
-                .catch(error => {
-                    console.error('送出失敗:', error);
-                    retryCount++;
-
-                    if (retryCount < MAX_RETRY) {
-                        // ✅ 自動重試（每次間隔遞增）
-                        const delay = retryCount * 2000;
-                        showError(`送出失敗，${delay / 1000} 秒後自動重試... (${retryCount}/${MAX_RETRY})`);
-                        setTimeout(() => sendPayload(payload), delay);
-                    } else {
-                        // ✅ 超過重試上限，顯示手動重試按鈕
-                        showError('網路不穩，請點右側按鈕手動重試。');
-                        lastPayload = payload;
-                        setLoading(false);
-                    }
-                })
-                .finally(() => {
-                    if (retryCount === 0 || retryCount >= MAX_RETRY) {
-                        setLoading(false);
-                    }
-                });
-            }
-
-            // ✅ 表單送出事件
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
-                hideError();
-                retryCount = 0;
+                
+                buttonText.textContent = '傳送中...';
+                spinner.classList.remove('hidden');
+                submitButton.disabled = true;
 
                 const file = photoInput.files[0];
 
@@ -339,35 +203,60 @@
                     });
                     return data;
                 };
+                
+                const sendPayload = (payload) => {
+                    fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors', 
+                        body: JSON.stringify(payload),
+                        headers: {
+                            'Content-Type': 'text/plain;charset=utf-8',
+                        },
+                    })
+                    .then(res => {
+                        console.log("Form submission request sent.");
+                        formContainer.classList.add('hidden-form');
+                        successMessage.classList.remove('hidden-form');
+                        form.reset();
+                    })
+                    .catch(error => {
+                        console.error('Submission Network Error!', error);
+                        alert('報名失敗，請檢查您的網路連線。');
+                    })
+                    .finally(() => {
+                        buttonText.textContent = '立即報名';
+                        spinner.classList.add('hidden');
+                        submitButton.disabled = false;
+                    });
+                };
 
                 if (file) {
                     const reader = new FileReader();
                     reader.readAsDataURL(file);
                     reader.onload = () => {
+                        const fileContent = reader.result;
                         let payload = getFormDataAsObject();
                         payload.photoFile = {
                             fileName: file.name,
                             mimeType: file.type,
-                            base64Data: reader.result.split(',')[1]
+                            base64Data: fileContent.split(',')[1]
                         };
-                        lastPayload = payload;
                         sendPayload(payload);
                     };
-                    reader.onerror = () => {
-                        showError('讀取照片失敗，請重新選擇圖片。');
+                    reader.onerror = (error) => {
+                        console.error('File Read Error!', error);
+                        alert('讀取檔案時發生錯誤，請稍後再試。');
+                        buttonText.textContent = '立即報名';
+                        spinner.classList.add('hidden');
+                        submitButton.disabled = false;
                     };
                 } else {
-                    showError('請務必上傳您的照片。');
+                    alert('請務必上傳您的照片。');
+                    buttonText.textContent = '立即報名';
+                    spinner.classList.add('hidden');
+                    submitButton.disabled = false;
                 }
             });
-
-            // ✅ 讓全域可存取 retrySubmit
-            window.retrySubmit = function() {
-                if (lastPayload) {
-                    retryCount = 0;
-                    sendPayload(lastPayload);
-                }
-            };
         });
     </script>
 </body>
