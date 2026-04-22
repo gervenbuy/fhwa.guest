@@ -23,8 +23,8 @@
         .hidden-form {
             opacity: 0;
             transform: scale(0.95);
-            visibility: hidden; /* More transition-friendly than display:none */
-            pointer-events: none; /* Explicitly prevent click interception */
+            visibility: hidden;
+            pointer-events: none;
         }
         .spinner {
             border-top-color: transparent;
@@ -34,6 +34,49 @@
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* ✅ 錯誤提示動畫 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* ✅ 錯誤訊息樣式 */
+        #error-banner {
+            display: none;
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            color: #dc2626;
+            font-size: 14px;
+        }
+        #error-banner.show {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ✅ 重試狀態樣式 */
+        .retry-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 13px;
+            cursor: pointer;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+        .retry-btn:hover {
+            background: #b91c1c;
         }
     </style>
 </head>
@@ -77,7 +120,6 @@
         </div>
     </section>
 
-
     <!-- Event Info and Form Section -->
     <section class="bg-gray-100 py-20">
         <div class="container mx-auto px-6">
@@ -107,6 +149,16 @@
                     <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 relative overflow-hidden min-h-[500px]">
                         <div id="form-container" class="form-container">
                             <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">線上報名</h3>
+
+                            <!-- ✅ 錯誤提示橫幅 -->
+                            <div id="error-banner">
+                                <svg style="flex-shrink:0;width:18px;height:18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span id="error-text">送出失敗，請稍後再試。</span>
+                                <button class="retry-btn" onclick="retrySubmit()">重新送出</button>
+                            </div>
+
                             <form id="signup-form" class="space-y-4">
                                 <div>
                                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">您的姓名</label>
@@ -120,7 +172,7 @@
                                     <label for="inviter" class="block text-sm font-medium text-gray-700 mb-1">您的邀請人是?</label>
                                     <input type="text" id="inviter" name="inviter" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 transition">
                                 </div>
-                                 <div>
+                                <div>
                                     <label for="attendance_date" class="block text-sm font-medium text-gray-700 mb-1">預計參加時間</label>
                                     <input type="date" id="attendance_date" name="attendance_date" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 transition">
                                 </div>
@@ -132,7 +184,7 @@
                                     <label for="industry" class="block text-sm font-medium text-gray-700 mb-1">您的產業別是?</label>
                                     <input type="text" id="industry" name="industry" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 transition">
                                 </div>
-                                 <div>
+                                <div>
                                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-MAIL</label>
                                     <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 transition">
                                 </div>
@@ -154,8 +206,12 @@
                                 </button>
                             </form>
                         </div>
+
+                        <!-- 成功訊息 -->
                         <div id="success-message" class="success-message hidden-form absolute inset-0 bg-white flex flex-col items-center justify-center p-8 text-center">
-                             <svg class="w-16 h-16 text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <svg class="w-16 h-16 text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
                             <h3 class="text-2xl font-bold text-gray-800">報名成功！</h3>
                             <p class="text-gray-600 mt-2">感謝您的報名，我們已收到您的資料，期待在線上會議與您相見！</p>
                         </div>
@@ -173,6 +229,15 @@
     </footer>
     
     <script>
+        // 🔴 請更換成您最新的 Google Apps Script 部署網址
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGUUDPdRX0yMWqBmyLtcrYa0tnRhyGAghSl8VCSATZn53igKR8WcC2OK2k7E7_9ay2/exec";
+
+        // ✅ 最大重試次數
+        const MAX_RETRY = 3;
+
+        let lastPayload = null; // 儲存最後一次的送出資料，供重試使用
+        let retryCount = 0;
+
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('signup-form');
             const submitButton = document.getElementById('submit-button');
@@ -181,16 +246,86 @@
             const formContainer = document.getElementById('form-container');
             const successMessage = document.getElementById('success-message');
             const photoInput = document.getElementById('photo');
+            const errorBanner = document.getElementById('error-banner');
+            const errorText = document.getElementById('error-text');
 
-            // 🔴 確認這是您最新的部署網址
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx14_gS6dThpkOU0RriWyKbZ9votXxGFjkKPHs7v7D4ADdIvZwtKGrFN_u788Lv7zpA3Q/exec";
+            // ✅ 顯示錯誤橫幅
+            function showError(msg) {
+                errorText.textContent = msg;
+                errorBanner.classList.add('show');
+                // 讓按鈕抖動
+                submitButton.classList.add('shake');
+                setTimeout(() => submitButton.classList.remove('shake'), 500);
+            }
 
+            // ✅ 隱藏錯誤橫幅
+            function hideError() {
+                errorBanner.classList.remove('show');
+            }
+
+            // ✅ 設定送出中狀態
+            function setLoading(isLoading) {
+                if (isLoading) {
+                    buttonText.textContent = '傳送中...';
+                    spinner.classList.remove('hidden');
+                    submitButton.disabled = true;
+                } else {
+                    buttonText.textContent = '立即報名';
+                    spinner.classList.add('hidden');
+                    submitButton.disabled = false;
+                }
+            }
+
+            // ✅ 核心送出函式（支援重試）
+            function sendPayload(payload) {
+                setLoading(true);
+                hideError();
+
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify(payload),
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8',
+                    },
+                })
+                .then(() => {
+                    // no-cors 無法判斷 response status，視為成功
+                    console.log("送出成功");
+                    retryCount = 0;
+                    lastPayload = null;
+                    formContainer.classList.add('hidden-form');
+                    successMessage.classList.remove('hidden-form');
+                    form.reset();
+                })
+                .catch(error => {
+                    console.error('送出失敗:', error);
+                    retryCount++;
+
+                    if (retryCount < MAX_RETRY) {
+                        // ✅ 自動重試（每次間隔遞增）
+                        const delay = retryCount * 2000;
+                        showError(`送出失敗，${delay / 1000} 秒後自動重試... (${retryCount}/${MAX_RETRY})`);
+                        setTimeout(() => sendPayload(payload), delay);
+                    } else {
+                        // ✅ 超過重試上限，顯示手動重試按鈕
+                        showError('網路不穩，請點右側按鈕手動重試。');
+                        lastPayload = payload;
+                        setLoading(false);
+                    }
+                })
+                .finally(() => {
+                    if (retryCount === 0 || retryCount >= MAX_RETRY) {
+                        setLoading(false);
+                    }
+                });
+            }
+
+            // ✅ 表單送出事件
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
-                buttonText.textContent = '傳送中...';
-                spinner.classList.remove('hidden');
-                submitButton.disabled = true;
+                hideError();
+                retryCount = 0;
 
                 const file = photoInput.files[0];
 
@@ -204,62 +339,35 @@
                     });
                     return data;
                 };
-                
-                const sendPayload = (payload) => {
-                     fetch(SCRIPT_URL, {
-                        method: 'POST',
-                        mode: 'no-cors', 
-                        body: JSON.stringify(payload),
-                        headers: {
-                            'Content-Type': 'text/plain;charset=utf-8',
-                        },
-                    })
-                    .then(res => {
-                        console.log("Form submission request sent.");
-                        formContainer.classList.add('hidden-form');
-                        successMessage.classList.remove('hidden-form');
-                        form.reset();
-                    })
-                    .catch(error => {
-                        console.error('Submission Network Error!', error);
-                        alert('報名失敗，請檢查您的網路連線。');
-                    })
-                    .finally(() => {
-                        buttonText.textContent = '立即報名';
-                        spinner.classList.add('hidden');
-                        submitButton.disabled = false;
-                    });
-                };
 
-                // Since photo is required, we always expect a file.
                 if (file) {
                     const reader = new FileReader();
                     reader.readAsDataURL(file);
                     reader.onload = () => {
-                        const fileContent = reader.result;
                         let payload = getFormDataAsObject();
                         payload.photoFile = {
                             fileName: file.name,
                             mimeType: file.type,
-                            base64Data: fileContent.split(',')[1]
+                            base64Data: reader.result.split(',')[1]
                         };
+                        lastPayload = payload;
                         sendPayload(payload);
                     };
-                    reader.onerror = (error) => {
-                         console.error('File Read Error!', error);
-                         alert('讀取檔案時發生錯誤，請稍後再試。');
-                         buttonText.textContent = '立即報名';
-                         spinner.classList.add('hidden');
-                         submitButton.disabled = false;
+                    reader.onerror = () => {
+                        showError('讀取照片失敗，請重新選擇圖片。');
                     };
                 } else {
-                    // This part is now mainly a fallback, as the form requires a file.
-                    alert('請務必上傳您的照片。');
-                    buttonText.textContent = '立即報名';
-                    spinner.classList.add('hidden');
-                    submitButton.disabled = false;
+                    showError('請務必上傳您的照片。');
                 }
             });
+
+            // ✅ 讓全域可存取 retrySubmit
+            window.retrySubmit = function() {
+                if (lastPayload) {
+                    retryCount = 0;
+                    sendPayload(lastPayload);
+                }
+            };
         });
     </script>
 </body>
